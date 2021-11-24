@@ -1,10 +1,23 @@
-require('dotenv').config();
-const fetch = require('node-fetch');
+require("dotenv").config();
+const fetch = require("node-fetch");
+const { Chess } = require("chess.js");
+
+const chess = new Chess();
 
 const headers = {
-  Authorization: 'Bearer ' + process.env.lichessToken,
+  Authorization: "Bearer " + process.env.lichessToken,
 };
 
-fetch('https://lichess.org/api/account', { headers })
-  .then(res => res.json())
-  .then(console.log);
+const ALL_STUDIES_URL = "https://lichess.org/study/by/TimAstier/export.pgn";
+const ONE_STUDY_URL = "https://lichess.org/api/study/RVw9HG6u.pgn";
+
+fetch(ONE_STUDY_URL, { headers }).then((res) => {
+  res.text().then((pgn) => {
+    console.log(pgn);
+    chess.load_pgn(pgn);
+    // console.log(chess.ascii());
+    // console.log(chess.fen());
+    console.log(chess.get_comments().filter((a) => a.comment.includes("KEY")));
+    console.log("done");
+  });
+});
