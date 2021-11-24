@@ -1,17 +1,18 @@
-# Lichess API doc & examples
+# Lichess OAuth API with a personal token
 
-- [API documentation](https://lichess.org/api)
-- [Example code](https://github.com/lichess-org/api/tree/master/example/)
-- [Which authentication is right for me](https://github.com/lichess-org/api/tree/master/example/README.md)
+You can make OAuth requests without going through the authorization code flow.
 
-## Contribute documentation
+Instead, [generate a personal token](https://lichess.org/account/oauth/token)
+that you can directly use in API requests.
 
-```shell
-cd doc
-npm install
-npm run serve -- --watch
-```
+Be careful, these tokens are like passwords so you should guard them carefully.
+The advantage to using a token over putting your password into a script is that a token can be revoked,
+and you can generate lots of them.
 
-Now open http://localhost:8080/. You should see the generated API doc.
+## Run this example
 
-Make modifications to `doc/specs/lichess-api.yaml`, and reload the page to see your changes.
+1. Copy `.env.default` to `.env`
+2. Create a [personal token](https://lichess.org/account/oauth/token)
+3. Set the token in `.env`
+4. Install dependencies with `npm install`
+5. Run with `node index.js`
