@@ -1,8 +1,7 @@
 require("dotenv").config();
 const fetch = require("node-fetch");
-const { Chess } = require("chess.js");
 
-const chess = new Chess();
+const { flat } = require("chess-moments");
 
 const headers = {
   Authorization: "Bearer " + process.env.lichessToken,
@@ -13,11 +12,17 @@ const ONE_STUDY_URL = "https://lichess.org/api/study/RVw9HG6u.pgn";
 
 fetch(ONE_STUDY_URL, { headers }).then((res) => {
   res.text().then((pgn) => {
-    console.log(pgn);
-    chess.load_pgn(pgn);
-    // console.log(chess.ascii());
-    // console.log(chess.fen());
-    console.log(chess.get_comments().filter((a) => a.comment.includes("KEY")));
+    const pgns = pgn.split(/(\[Event)/);
+    // console.log(pgns);
+    const firstPgn = `${pgns[1]}${pgns[2]}`;
+    const moments = flat(firstPgn);
+    const filteredMoments = moments.filter((m) => {
+      if (m.comment === undefined) {
+        return false;
+      }
+      return m.comment.includes("*KEY*");
+    });
+    console.log(filteredMoments);
     console.log("done");
   });
 });
