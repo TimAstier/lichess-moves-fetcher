@@ -23,14 +23,20 @@ fetch(ONE_STUDY_URL, { headers }).then((res) => {
 
     [firstChapter, secondChapter, thirdChapter].forEach((chapter) => {
       const moments = flat(chapter);
-      const filteredMoments = moments.filter((m) => {
-        // TODO: Augment with previous position
+      const filteredMoments = moments.filter((m, index) => {
         if (m.comment === undefined) {
           return false;
         }
         return m.comment.includes("*KEY*");
       });
-      positions.push(filteredMoments);
+      const augmentedMoments = filteredMoments.map((m) => {
+        let previousFen = "";
+        if (m.index > 0) {
+          previousFen = moments[m.index - 1].fen;
+        }
+        return { ...m, previousFen };
+      });
+      positions.push(augmentedMoments);
     });
     console.log(positions);
     console.log("done");
